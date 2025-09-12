@@ -1,0 +1,16 @@
+# NPM
+node_modules
+
+# Build
+build
+
+# Env
+.env.development
+.env
+
+# macOS
+.DS_Store
+
+# IDEs
+.idea
+.vscode

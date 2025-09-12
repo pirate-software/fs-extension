@@ -1,0 +1,11 @@
+@import "../../styles/tailwind.css";
+
+@layer base {
+  body {
+    @apply h-screen w-screen overflow-hidden bg-alveus-tan font-sans text-alveus-tan;
+  }
+
+  #root {
+    @apply relative h-full w-full;
+  }
+}
