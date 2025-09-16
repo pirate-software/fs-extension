@@ -1,16 +1,16 @@
-import { AmbassadorsProvider } from "../../hooks/useAmbassadors";
+import { FerretsProvider } from "../../hooks/useFerrets";
 
 import Nav from "./components/Nav";
 import Ambassadors from "./components/Ambassadors";
 
 function App() {
   return (
-    <AmbassadorsProvider>
+    <FerretsProvider>
       <div className="relative h-full w-full">
         <Nav />
         <Ambassadors />
       </div>
-    </AmbassadorsProvider>
+    </FerretsProvider>
   );
 }
 

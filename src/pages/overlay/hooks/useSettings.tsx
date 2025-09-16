@@ -34,7 +34,7 @@ const settings = {
     title: "Menu that was last opened",
     type: "string",
     process: (value: any): OverlayKey => {
-      return isValidOverlayKey(value) ? value : "ambassadors";
+      return isValidOverlayKey(value) ? value : "ferrets";
     },
     configurable: false,
   },

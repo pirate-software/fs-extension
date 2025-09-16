@@ -3,7 +3,7 @@ import tmi, { type ChatUserstate } from "tmi.js";
 
 import { typeSafeObjectEntries } from "../utils/helpers";
 
-import { useAmbassadors } from "./useAmbassadors";
+import { useFerrets } from "./useFerrets";
 
 import useChannel from "./useChannel";
 
@@ -45,7 +45,7 @@ export default function useChatCommand(callback: (command: string) => void) {
     [channel],
   );
 
-  const ambassadors = useAmbassadors();
+  const ambassadors = useFerrets();
   const commandsMap = useMemo(() => {
     const commands = new Map<string, string>();
     if (ambassadors) {

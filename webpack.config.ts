@@ -180,21 +180,21 @@ const config: webpack.Configuration = {
         exclude: /node_modules/,
         type: "asset",
       },
-      // Load ambassador images in @alveusgg packages
+      // Load ferret images in @pirate-software packages
       {
         test: /\.(png|jpe?g)$/,
         include: [
           new RegExp(
             join(
               "node_modules",
-              "@alveusgg",
-              "data",
+              "@pirate-software",
+              "fs-data",
               "build",
               "assets",
-              "ambassadors",
+              "ferrets",
             ).replace(/\\/g, "\\\\"),
           ),
-          new RegExp(join("src", "assets", "winston").replace(/\\/g, "\\\\")),
+          new RegExp(join("src", "assets").replace(/\\/g, "\\\\")),
         ],
         type: "asset",
         generator: {

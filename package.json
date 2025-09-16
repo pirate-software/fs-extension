@@ -1,21 +1,21 @@
 {
-  "name": "@alveusgg/extension",
+  "name": "@pirate-software/fs-extension",
   "version": "0.1.0",
   "private": true,
   "license": "SEE LICENSE IN LICENSE.md",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alveusgg/extension.git"
+    "url": "git+https://github.com/pirate-software/fs-extension.git"
   },
   "bugs": {
-    "url": "https://github.com/alveusgg/extension/issues"
+    "url": "https://github.com/pirate-software/fs-extension/issues"
   },
   "engines": {
     "node": "22.x",
     "pnpm": "^10.11.1"
   },
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706",
   "scripts": {
     "prepare": "husky",
     "dev": "cross-env NODE_ENV=development NODE_OPTIONS=\"--loader ts-node/esm\" webpack serve",
@@ -29,8 +29,8 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "@alveusgg/data": "0.65.0",
     "@headlessui/react": "^2.2.7",
+    "@pirate-software/fs-data": "^0.2.2",
     "luxon": "^3.7.1",
     "react": "^19.1.1",
     "react-canvas-confetti": "^2.0.7",

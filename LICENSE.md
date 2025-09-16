@@ -1,15 +1,21 @@
-# Alveus.gg License
+# License
 
-All code within this Alveus.gg project is released under the Apache License,
+All code within this project is released under the Apache License,
 Version 2.0.
 
-Copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team
+Original code copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team
 <opensource@alveussanctuary.org>
+
+Modifications copyright 2025 Pirate Software
+<gopiratesoftware@gmail.com>
 
 This license does not apply to any images or other media contained within the
 project. These remain the property of their respective owners. Please contact
-the Alveus team if you wish to license any images or other media for use in your
-own projects, or if you have any questions about the license.
+the Pirate Software team if you wish to license any images or other media for use in
+your own projects, or if you have any questions about the license.
+
+The best way to do this is via the [Discord](https://discord.gg/piratesoftware) in a
+mod ticket.
 
 ## Apache License
 

@@ -12,10 +12,9 @@ import {
 import Welcome from "../../../../components/Welcome";
 import IconWelcome from "../../../../components/icons/IconWelcome";
 import IconAmbassadors from "../../../../components/icons/IconAmbassadors";
-import IconPlant from "../../../../components/icons/IconPlant";
 import IconSettings from "../../../../components/icons/IconSettings";
 
-import { useAmbassadors } from "../../../../hooks/useAmbassadors";
+import { useFerrets } from "../../../../hooks/useFerrets";
 import { classes } from "../../../../utils/classes";
 import { visibleUnderCursor } from "../../../../utils/dom";
 
@@ -24,7 +23,7 @@ import useChatCommand from "../../../../hooks/useChatCommand";
 import useSettings from "../../hooks/useSettings";
 import useSleeping from "../../hooks/useSleeping";
 
-import AmbassadorsOverlay from "./Ambassadors";
+import AmbassadorsOverlay from "./Ferrets";
 import SettingsOverlay from "./Settings";
 
 import Buttons, { type ButtonsOption } from "../Buttons";
@@ -34,9 +33,7 @@ const commandTimeout = 10_000;
 
 type OverlayOption = ButtonsOption & {
   component: (props: OverlayOptionProps) => JSX.Element;
-  condition?: (props: {
-    ambassadors: ReturnType<typeof useAmbassadors>;
-  }) => boolean;
+  condition?: (props: { ferrets: ReturnType<typeof useFerrets> }) => boolean;
 };
 
 const overlayOptions = [
@@ -44,7 +41,7 @@ const overlayOptions = [
     key: "welcome",
     type: "primary",
     icon: IconWelcome,
-    title: "Welcome to Alveus",
+    title: "Welcome to Ferret Software",
     component: (props) => (
       <Welcome
         {...props}
@@ -53,26 +50,12 @@ const overlayOptions = [
     ),
   },
   {
-    key: "ambassadors",
+    key: "ferrets",
     type: "primary",
     icon: IconAmbassadors,
-    title: "Explore our Animal Ambassadors",
+    title: "Explore our Ferrets",
     component: AmbassadorsOverlay,
-    condition: ({ ambassadors }) =>
-      Object.values(ambassadors ?? {}).some(
-        (a) => a.species.class.key !== "plantae",
-      ),
-  },
-  {
-    key: "ambassadorPlants",
-    type: "primary",
-    icon: IconPlant,
-    title: "Explore our Plant Ambassadors",
-    component: (props) => <AmbassadorsOverlay {...props} plants />,
-    condition: ({ ambassadors }) =>
-      Object.values(ambassadors ?? {}).some(
-        (a) => a.species.class.key === "plantae",
-      ),
+    condition: ({ ferrets }) => Object.values(ferrets ?? {}).some(() => true),
   },
   {
     key: "settings",
@@ -113,14 +96,14 @@ export default function Overlay() {
     off: removeSleepListener,
   } = useSleeping();
 
-  const ambassadors = useAmbassadors();
+  const ferrets = useFerrets();
   const options = useMemo(
     () =>
       overlayOptions.filter(
         (option) =>
-          !("condition" in option) || option.condition({ ambassadors }),
+          !("condition" in option) || option.condition({ ferrets: ferrets }),
       ),
-    [ambassadors],
+    [ferrets],
   );
 
   const [activeAmbassador, setActiveAmbassador] =
@@ -146,19 +129,12 @@ export default function Overlay() {
     useCallback(
       (command: string) => {
         if (!settings.disableChatPopup.value) {
-          const ambassador = ambassadors?.[command];
-          if (ambassador)
-            setActiveAmbassador({ key: command, isCommand: true });
+          const ferret = ferrets?.[command];
+          if (ferret) setActiveAmbassador({ key: command, isCommand: true });
           else if (command !== "welcome") return;
 
           // Show the card
-          setVisibleOption(
-            ambassador
-              ? ambassador.species.class.key === "plantae"
-                ? "ambassadorPlants"
-                : "ambassadors"
-              : "welcome",
-          );
+          setVisibleOption(ferret ? "ferrets" : "welcome");
 
           // Dismiss the overlay after a delay
           if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -172,7 +148,7 @@ export default function Overlay() {
           wake(commandTimeout);
         }
       },
-      [settings.disableChatPopup.value, ambassadors, wake],
+      [settings.disableChatPopup.value, ferrets, wake],
     ),
   );
 

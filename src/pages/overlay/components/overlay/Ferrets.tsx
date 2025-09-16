@@ -8,9 +8,9 @@ import {
 import { Transition } from "@headlessui/react";
 
 import AmbassadorCard from "../../../../components/AmbassadorCard";
-import AmbassadorButton from "../../../../components/AmbassadorButton";
+import FerretButton from "../../../../components/AmbassadorButton";
 
-import { useAmbassadors } from "../../../../hooks/useAmbassadors";
+import { useFerrets as useFerrets } from "../../../../hooks/useFerrets";
 import { classes } from "../../../../utils/classes";
 import { typeSafeObjectEntries } from "../../../../utils/helpers";
 import { sortPartialDates } from "../../../../utils/dateManager";
@@ -27,46 +27,42 @@ const arrowPathClass =
   "[&_path]:stroke-alveus-tan [&_path]:stroke-[0.25rem] [&_path]:[paint-order:stroke] [&_path]:transition-[stroke] [&_path]:group-hover:stroke-highlight [&_path]:group-hover:stroke-[0.375rem] [&_path]:group-focus:stroke-highlight [&_path]:group-focus:stroke-[0.375rem]";
 const hiddenClass = "opacity-0 pointer-events-none";
 
-type AmbassadorsProps = OverlayOptionProps & { plants?: boolean };
+type AmbassadorsProps = OverlayOptionProps;
 
 export default function Ambassadors(props: AmbassadorsProps) {
   const {
     context: { activeAmbassador, setActiveAmbassador },
     className,
-    plants = false,
   } = props;
 
-  const rawAmbassadors = useAmbassadors();
+  const rawAmbassadors = useFerrets();
   const ambassadors = useMemo(
     () =>
-      typeSafeObjectEntries(rawAmbassadors ?? {})
-        .filter(
-          ([, ambassador]) =>
-            (ambassador.species.class.key === "plantae") === plants,
-        )
-        .sort(([, a], [, b]) => sortPartialDates(a.arrival, b.arrival)),
-    [rawAmbassadors, plants],
+      typeSafeObjectEntries(rawAmbassadors ?? {}).sort(([, a], [, b]) =>
+        sortPartialDates(a.arrival, b.arrival),
+      ),
+    [rawAmbassadors],
   );
 
   const upArrowRef = useRef<HTMLButtonElement>(null);
-  const ambassadorList = useRef<HTMLDivElement>(null);
+  const ferretList = useRef<HTMLDivElement>(null);
   const downArrowRef = useRef<HTMLButtonElement>(null);
 
   // Scroll the ambassador list to the selected ambassador
   useEffect(() => {
     if (
-      !ambassadorList.current ||
+      !ferretList.current ||
       !activeAmbassador.key ||
       !activeAmbassador.isCommand
     )
       return;
 
     const offset = 200;
-    const anchorElement = ambassadorList.current.querySelector(
+    const anchorElement = ferretList.current.querySelector(
       `#${activeAmbassador.key}`,
     );
     if (anchorElement instanceof HTMLButtonElement)
-      ambassadorList.current.scrollTo({
+      ferretList.current.scrollTo({
         top: Math.max(0, anchorElement.offsetTop - offset),
         behavior: "smooth",
       });
@@ -75,11 +71,11 @@ export default function Ambassadors(props: AmbassadorsProps) {
   // Allow the list to be scrolled via the buttons
   const ambassadorListScroll = useCallback(
     (event: MouseEvent, direction: number) => {
-      if (ambassadorList.current) {
+      if (ferretList.current) {
         event.stopPropagation();
 
-        ambassadorList.current.scroll({
-          top: ambassadorList.current.scrollTop - direction,
+        ferretList.current.scroll({
+          top: ferretList.current.scrollTop - direction,
           left: 0,
           behavior: "smooth",
         });
@@ -90,7 +86,7 @@ export default function Ambassadors(props: AmbassadorsProps) {
 
   // Ensure the buttons are only shown if the list is scrollable
   const handleArrowVisibility = useCallback(() => {
-    const list = ambassadorList.current;
+    const list = ferretList.current;
     if (!list) return;
 
     const listRect = list.getBoundingClientRect();
@@ -132,14 +128,14 @@ export default function Ambassadors(props: AmbassadorsProps) {
     >
       <div className="relative z-10 flex flex-col items-center">
         <div
-          ref={ambassadorList}
+          ref={ferretList}
           className="list-fade -my-[var(--twitch-vertical-padding)] scrollbar-none flex w-40 flex-col items-center gap-4 overflow-scroll px-4 py-[calc(var(--twitch-vertical-padding)+var(--list-fade-padding))]"
           onScroll={handleArrowVisibility}
         >
           {ambassadors.map(([key]) => (
-            <AmbassadorButton
+            <FerretButton
               key={key}
-              ambassador={key}
+              ferret={key}
               onClick={() => {
                 setActiveAmbassador((prev) =>
                   prev.key === key ? {} : { key },

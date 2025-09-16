@@ -1,9 +1,9 @@
 import { useState, useCallback, Fragment, useMemo } from "react";
 
 import AmbassadorCard from "../../../components/AmbassadorCard";
-import AmbassadorButton from "../../../components/AmbassadorButton";
+import FerretButton from "../../../components/AmbassadorButton";
 
-import { useAmbassadors } from "../../../hooks/useAmbassadors";
+import { useFerrets } from "../../../hooks/useFerrets";
 
 import useChatCommand from "../../../hooks/useChatCommand";
 import { typeSafeObjectEntries } from "../../../utils/helpers";
@@ -11,7 +11,7 @@ import { typeSafeObjectEntries } from "../../../utils/helpers";
 import Overlay from "./Overlay";
 
 export default function Ambassadors() {
-  const rawAmbassadors = useAmbassadors();
+  const rawAmbassadors = useFerrets();
   const ambassadors = useMemo(
     () => typeSafeObjectEntries(rawAmbassadors ?? {}),
     [rawAmbassadors],
@@ -45,8 +45,8 @@ export default function Ambassadors() {
             />
           </Overlay>
 
-          <AmbassadorButton
-            ambassador={key}
+          <FerretButton
+            ferret={key}
             onClick={() => setAmbassadorCard(key)}
             className="w-32 max-w-full md:w-48"
           />

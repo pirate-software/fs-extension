@@ -79,11 +79,11 @@ The panel is available at [localhost:8080/panel.html](https://localhost:8080/pan
 
 ## Chatbot Commands
 
-`![ambassador]`: displays the card of the corresponding ambassador
+`![ferret]`: displays the card of the corresponding ferret
 
-- Note: `[ambassador]` is the first name of any ambassador (Ex: !nilla = Nilla Wafer, !snork = Snork)
+- Note: `[ferret]` is the full name of any ferret, spaces omitted (Ex: !bigmike = Big Mike, !pepper2 = Pepper 2)
 
-`!welcome`: displays the Alveus introduction section
+`!welcome`: displays the introduction section
 
 ## Contribute
 
@@ -99,7 +99,7 @@ Contributions are always welcome! If you have any ideas, suggestions, fixes, fee
 
 ## User Data
 
-When using the extension, the extension will create an anonymous connection to the current Twitch channel's chat, as well as a few other Alveus-related Twitch channels. This is to allow the extension to listen for commands run by moderators to trigger popups in the overlay. The extension does not store any messages from chat.
+When using the extension, the extension will create an anonymous connection to the current Twitch channel's chat, as well as any other related Twitch channels. This is to allow the extension to listen for commands run by moderators to trigger popups in the overlay. The extension does not store any messages from chat.
 
 When using the extension, it will create a local storage entry in your browser to store the last section of the overlay that you accessed, and any preferences you set (such as disabling the mod-triggered popups). This is to allow the extension to remember your preferences between sessions. The data stored in local storage is not shared with anyone and does not include any personal information.
 

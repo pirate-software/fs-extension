@@ -9,11 +9,16 @@ type PartialDate =
   | `${number}-${number}`
   | `${number}-${number}-${number}`;
 
+type BirthdayDate = `${number}-${number}`;
+
 const splitPartialDate = (partialDate: PartialDate) =>
   partialDate.split("-").map((x) => parseInt(x)) as
     | [number]
     | [number, number]
     | [number, number, number];
+
+const splitBirthdayDate = (birthdayDate: BirthdayDate) =>
+  birthdayDate.split("-").map((x) => parseInt(x)) as [number, number];
 
 const parsePartialDate = (partialDate: PartialDate) => {
   const [year, month, day] = splitPartialDate(partialDate);
@@ -27,11 +32,24 @@ const parsePartialDate = (partialDate: PartialDate) => {
   ).startOf("day");
 };
 
-export const isBirthday = (dateOfBirth: PartialDate) => {
-  const [, month, day] = splitPartialDate(dateOfBirth);
-  if (month === undefined || day === undefined) return false;
-
+export const isBirthday = (
+  dateOfBirth: PartialDate | null,
+  birthdayDate: BirthdayDate | null,
+) => {
+  const [, month, day] = dateOfBirth
+    ? splitPartialDate(dateOfBirth)
+    : [undefined, undefined, undefined];
   const today = getToday();
+
+  if (month === undefined || day === undefined) {
+    // no full DOB - use birthday date if available
+    if (!birthdayDate) return false;
+    const [bMonth, bDay] = splitBirthdayDate(birthdayDate);
+    if (bMonth === undefined || bDay === undefined) return false;
+
+    return today.month === bMonth && today.day === bDay;
+  }
+
   return today.month === month && today.day === day;
 };
 
@@ -76,6 +94,15 @@ export const formatDate = (date: PartialDate, showApproximate = true) => {
   if (month && year)
     return `${showApproximate ? "~" : ""}${formattedMonth}, ${year}`;
   return `${showApproximate ? "~" : ""}${year}`;
+};
+
+export const formatBirthday = (date: BirthdayDate) => {
+  const [month, day] = splitBirthdayDate(date);
+
+  const formattedMonth = month && getMonthName(month);
+  const formattedDay = day && `${day}${getOrdinal(day)}`;
+
+  return `${formattedMonth} ${formattedDay}`;
 };
 
 export const sortPartialDates = (
