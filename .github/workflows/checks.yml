@@ -55,7 +55,7 @@ jobs:
           cache: pnpm
 
       - name: Authenticate GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -86,7 +86,7 @@ jobs:
           cache: pnpm
 
       - name: Authenticate GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
