@@ -69,11 +69,11 @@ type Ferret = z.infer<typeof apiFerretSchema>;
 //     }),
 // });
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL?.replace(/\/+$/, "");
-if (!apiBaseUrl)
-  throw new Error("REACT_APP_API_BASE_URL environment variable is not set");
-
 //TODO: Re-enable fetching from API
+// const apiBaseUrl = process.env.REACT_APP_API_BASE_URL?.replace(/\/+$/, "");
+// if (!apiBaseUrl)
+//   throw new Error("REACT_APP_API_BASE_URL environment variable is not set");
+
 // const fetchFerrets = async (): Promise<Record<string, Ferret>> => {
 //   const response = await fetch(`${apiBaseUrl}/api/stream/ferrets`);
 //   if (!response.ok)

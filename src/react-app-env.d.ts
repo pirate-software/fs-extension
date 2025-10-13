@@ -9,7 +9,8 @@ declare namespace NodeJS {
     readonly REACT_APP_DEFAULT_CHANNEL_NAMES?: string;
     readonly REACT_APP_EXTRA_CHANNEL_NAMES?: string;
     readonly REACT_APP_TEST_CHANNEL_NAMES?: string;
-    readonly REACT_APP_API_BASE_URL?: string;
+    //TODO: Re-enable API
+    // readonly REACT_APP_API_BASE_URL?: string;
     readonly REACT_APP_TIMEZONE?: string;
   };
 }

@@ -17,7 +17,7 @@ export default function Ferrets() {
     [rawFerrets],
   );
 
-  // Allow chat commands to select an ambassador, as well as the user
+  // Allow chat commands to select a ferret, as well as the user
   const [ferretCard, setFerretCard] = useState<string>();
   useChatCommand(
     useCallback(
