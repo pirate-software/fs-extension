@@ -30,7 +30,7 @@ export default function Ferrets() {
   );
 
   return (
-    <main className="relative scrollbar flex max-h-full flex-wrap justify-center gap-4 overflow-x-hidden overflow-y-auto px-2 pt-16 pb-4 scrollbar-thumb-fs-black scrollbar-track-fs-tan-100 md:px-4">
+    <main className="relative scrollbar flex max-h-full flex-wrap justify-center gap-4 overflow-x-hidden overflow-y-auto px-2 pt-16 pb-4 scrollbar-thumb-fs-tan-800 scrollbar-track-fs-tan-100 md:px-4">
       <div className="absolute inset-x-0 top-0 h-12 w-screen bg-fs-tan" />
 
       {ferrets.map(([key]) => (
