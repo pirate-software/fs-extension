@@ -38,7 +38,7 @@ export default function Welcome(props: WelcomeProps) {
         specifically seek out animals which have dire medical needs, are victims
         of abuse or neglect, or cannot otherwise be taken care of by their
         owners. We do not adopt animals out and do not accept donations of any
-        kind.
+        kind as this is not a charity.
       </p>
 
       <ul className="mb-2 flex flex-wrap items-center justify-center gap-4">
