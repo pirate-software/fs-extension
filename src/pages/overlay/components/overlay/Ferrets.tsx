@@ -3,8 +3,10 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useState,
   type MouseEvent,
 } from "react";
+import playgroups from "@pirate-software/fs-data/build/playgroups";
 import { Transition } from "@headlessui/react";
 
 import FerretCard from "../../../../components/FerretCard";
@@ -35,13 +37,18 @@ export default function Ferrets(props: FerretsProps) {
     className,
   } = props;
 
+  const [selectedPlaygroup, setSelectedPlaygroup] = useState<string>("all");
   const rawFerrets = useFerrets();
   const ferrets = useMemo(
     () =>
-      typeSafeObjectEntries(rawFerrets ?? {}).sort(([, a], [, b]) =>
-        sortPartialDates(a.arrival, b.arrival),
-      ),
-    [rawFerrets],
+      typeSafeObjectEntries(rawFerrets ?? {})
+        .filter(
+          ([, ferret]) =>
+            selectedPlaygroup === "all" ||
+            ferret.playgroup === selectedPlaygroup,
+        )
+        .sort(([, a], [, b]) => sortPartialDates(a.arrival, b.arrival)),
+    [rawFerrets, selectedPlaygroup],
   );
 
   const upArrowRef = useRef<HTMLButtonElement>(null);
@@ -128,6 +135,34 @@ export default function Ferrets(props: FerretsProps) {
           className="list-fade -my-[var(--twitch-vertical-padding)] scrollbar-none flex w-40 flex-col items-center gap-4 overflow-scroll px-4 py-[calc(var(--twitch-vertical-padding)+var(--list-fade-padding))]"
           onScroll={handleArrowVisibility}
         >
+          <div className="w-full">
+            <select
+              className="mx-auto block w-full rounded-lg bg-fs-tan px-2 py-1 text-sm text-fs-black shadow-lg"
+              value={selectedPlaygroup}
+              onChange={(e) => setSelectedPlaygroup(e.target.value)}
+            >
+              <option value="all">All Playgroups</option>
+              {Object.entries(playgroups)
+                .filter(([, group]) => group.name !== playgroups.valhalla.name)
+                .sort(([, a], [, b]) => {
+                  const prioGroups = new Set<string>([
+                    playgroups.genpop.name,
+                    playgroups.solo.name,
+                  ]); // genpop and solo first in list
+                  return prioGroups.has(String(a.name)) ===
+                    prioGroups.has(String(b.name))
+                    ? a.name.localeCompare(b.name)
+                    : prioGroups.has(String(a.name))
+                      ? -1
+                      : 1;
+                })
+                .map(([key, group]) => (
+                  <option key={key} value={key}>
+                    {group.name}
+                  </option>
+                ))}
+            </select>
+          </div>
           {ferrets.map(([key]) => (
             <FerretButton
               key={key}

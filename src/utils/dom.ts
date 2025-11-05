@@ -6,6 +6,12 @@
  * @returns Element if one is visible under the cursor, null otherwise
  */
 export function visibleUnderCursor(e: MouseEvent) {
+  // If a dropdown menu is open, assume it's a part of the overlay
+  const activeElement = document.activeElement;
+  if (activeElement instanceof HTMLSelectElement) {
+    return activeElement;
+  }
+
   let { clientX: x, clientY: y } = e;
 
   // If the click event was triggered by a keyboard (e.g. 'Enter')
@@ -19,7 +25,7 @@ export function visibleUnderCursor(e: MouseEvent) {
   // Get all the elements under the click
   const elements = document.elementsFromPoint(x, y);
 
-  // For each element, if it has a background then assume it is part of the overlay and return it
+  // For each element, check if it's part of the overlay
   for (const element of elements) {
     if (element === document.body) break;
 

@@ -23,7 +23,7 @@ import useChatCommand from "../../../../hooks/useChatCommand";
 import useSettings from "../../hooks/useSettings";
 import useSleeping from "../../hooks/useSleeping";
 
-import FerretssOverlay from "./Ferrets";
+import FerretsOverlay from "./Ferrets";
 import SettingsOverlay from "./Settings";
 
 import Buttons, { type ButtonsOption } from "../Buttons";
@@ -54,7 +54,7 @@ const overlayOptions = [
     type: "primary",
     icon: IconFerrets,
     title: "Meet the Ferrets",
-    component: FerretssOverlay,
+    component: FerretsOverlay,
     condition: ({ ferrets }) => Object.values(ferrets ?? {}).some(() => true),
   },
   {
