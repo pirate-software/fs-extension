@@ -13,6 +13,7 @@ import useChannel from "../hooks/useChannel";
 import Card from "./Card";
 import IconTikTok from "./icons/IconTikTok";
 import IconYouTube from "./icons/IconYoutube";
+import IconCamera from "./icons/IconCamera";
 
 const socialClass =
   "transition-[color,transform,scale] hover:scale-125 focus:scale-125 hover:text-highlight focus:text-highlight";
@@ -94,12 +95,22 @@ export default function Welcome(props: WelcomeProps) {
         </li>
         <li className={socialClass}>
           <a
-            href="https://x.com/rivermakes"
+            href="https://x.com/FerretsLive"
             rel="noreferrer"
             target="_blank"
-            title="Shaye's Twitter"
+            title="Official Twitter"
           >
             <IconTwitter size={32} />
+          </a>
+        </li>
+        <li className={socialClass}>
+          <a
+            href="https://x.com/ferretposting"
+            rel="noreferrer"
+            target="_blank"
+            title="Shaye's Ferret Pics Twitter"
+          >
+            <IconCamera size={32} />
           </a>
         </li>
         <li className={socialClass}>
