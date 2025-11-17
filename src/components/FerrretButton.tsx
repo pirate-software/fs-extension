@@ -21,7 +21,7 @@ export default function FerretButton(props: FerretButtonProps) {
   return (
     <button
       className={classes(
-        "group/button relative flex shrink-0 flex-col items-center justify-start rounded-lg bg-tan text-center shadow-lg transition-[filter] hover:brightness-90",
+        "group/button relative flex shrink-0 flex-col items-center justify-start rounded-lg bg-framecol text-center shadow-lg transition-[filter] hover:brightness-90 dark:bg-framecol-dark",
         className,
       )}
       id={ferretKey}
@@ -38,7 +38,7 @@ export default function FerretButton(props: FerretButtonProps) {
 
       <div className="my-auto px-1 pt-2 pb-2">
         <h2 className="text-sm text-balance">{ferret.name}</h2>
-        <h3 className="text-xs text-balance text-red">
+        <h3 className="text-xs text-balance text-subtitlecol dark:text-subtitlecol-dark">
           {playgroups[ferret.playgroup].name}
         </h3>
       </div>

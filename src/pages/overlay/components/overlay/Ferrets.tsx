@@ -60,7 +60,7 @@ export default function Ferrets(props: FerretsProps) {
   useEffect(() => {
     if (!ferretList.current || !activeFerret.key) return;
 
-    const offset = 200;
+    const offset = 200; // offset to put card at top
     const anchorElement = ferretList.current.querySelector(
       `#${activeFerret.key}`,
     );
@@ -146,7 +146,18 @@ export default function Ferrets(props: FerretsProps) {
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<string>).detail;
-      if (detail) setActiveFerret({ key: detail });
+      if (detail) {
+        setActiveFerret({ key: detail });
+        // If the new ferret isn't in the current playgroup, switch to "all"
+        const ferretToSelect = rawFerrets?.[detail];
+        if (
+          ferretToSelect &&
+          selectedPlaygroup !== "all" &&
+          ferretToSelect.playgroup !== selectedPlaygroup
+        ) {
+          setSelectedPlaygroup("all");
+        }
+      }
     };
 
     window.addEventListener("fsext:selectFerret", handler as EventListener);
@@ -155,7 +166,7 @@ export default function Ferrets(props: FerretsProps) {
         "fsext:selectFerret",
         handler as EventListener,
       );
-  }, [setActiveFerret]);
+  }, [setActiveFerret, selectedPlaygroup, rawFerrets]);
 
   // When ferret/playgroup changes, scroll to selected ferret
   useEffect(() => {
@@ -223,33 +234,40 @@ export default function Ferrets(props: FerretsProps) {
           }}
         >
           <div ref={playgroupSelector} className="sticky top-0 z-30 w-full">
-            <select
-              className="transition-ring text-text mx-auto block w-full rounded-lg bg-tan px-2 py-1 text-sm shadow-lg ring-inset data-[at-top=false]:ring-2"
-              value={selectedPlaygroup}
-              onChange={(e) => setSelectedPlaygroup(e.target.value)}
+            {/* Extra div needed to add padding for dropdown arrow. Makes the dropdown box position funky though */}
+            <div
+              className="transition-ring w-full rounded-lg bg-framecol px-2 py-1 pr-1 ring-3 ring-white/25 ring-inset data-[at-top=false]:ring-outlinecol dark:bg-framecol-dark"
               data-at-top="true"
             >
-              <option value="all">All Playgroups</option>
-              {(Object.entries(playgroups) as [string, { name: string }][])
-                .filter(([, group]) => group.name !== playgroups.valhalla.name)
-                .sort(([, a], [, b]) => {
-                  const prioGroups = new Set<string>([
-                    playgroups.genpop.name,
-                    playgroups.solo.name,
-                  ]); // genpop and solo first in list
-                  return prioGroups.has(String(a.name)) ===
-                    prioGroups.has(String(b.name))
-                    ? a.name.localeCompare(b.name)
-                    : prioGroups.has(String(a.name))
-                      ? -1
-                      : 1;
-                })
-                .map(([key, group]) => (
-                  <option key={key} value={key}>
-                    {group.name}
-                  </option>
-                ))}
-            </select>
+              <select
+                className="text-text mx-auto block w-full bg-framecol text-sm dark:bg-framecol-dark"
+                value={selectedPlaygroup}
+                onChange={(e) => setSelectedPlaygroup(e.target.value)}
+              >
+                <option value="all">All Playgroups</option>
+                {(Object.entries(playgroups) as [string, { name: string }][])
+                  .filter(
+                    ([, group]) => group.name !== playgroups.valhalla.name,
+                  )
+                  .sort(([, a], [, b]) => {
+                    const prioGroups = new Set<string>([
+                      playgroups.genpop.name,
+                      playgroups.solo.name,
+                    ]); // genpop and solo first in list
+                    return prioGroups.has(String(a.name)) ===
+                      prioGroups.has(String(b.name))
+                      ? a.name.localeCompare(b.name)
+                      : prioGroups.has(String(a.name))
+                        ? -1
+                        : 1;
+                  })
+                  .map(([key, group]) => (
+                    <option key={key} value={key}>
+                      {group.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
           </div>
           {ferrets.map(([key]) => (
             <FerretButton

@@ -16,7 +16,7 @@ import IconYouTube from "./icons/IconYoutube";
 import IconCamera from "./icons/IconCamera";
 
 const socialClass =
-  "transition-[color,transform,scale] hover:scale-125 focus:scale-125 hover:text-highlight focus:text-highlight";
+  "transition-[color,transform,scale] hover:scale-125 focus:scale-125 hover:text-highlight focus:text-highlight dark:hover:text-highlight-dark dark:focus:text-highlight-dark";
 
 interface WelcomeProps {
   className?: string;
@@ -149,7 +149,7 @@ export default function Welcome(props: WelcomeProps) {
 
       {/* <a
         className="flex w-fit items-center justify-center gap-1 text-xs transition-colors hover:text-highlight focus:text-highlight"
-        href="https://github.com/alveusgg/extension"
+        href="https://github.com/pirate-software/fs-extension"
         rel="noreferrer"
         target="_blank"
       >

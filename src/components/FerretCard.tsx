@@ -28,7 +28,7 @@ import playgroups from "@pirate-software/fs-data/build/playgroups";
 import IconInfo from "./icons/IconInfo";
 import Tooltip from "./Tooltip";
 
-const headingClass = "text-base text-titlecol";
+const headingClass = "text-base text-titlecol dark:text-titlecol-dark";
 const rowClass = "flex flex-wrap gap-x-6 gap-y-1 [&>*]:mr-auto";
 
 export interface FerretCardProps {
@@ -129,7 +129,7 @@ export default function FerretCard(props: FerretCardProps) {
 
   const wikiUrl = `https://ferrets.piratesoftware.wiki/wiki/${ferret.wikipage}`;
   const linkClass =
-    "text-chocolate-deep transition-colors hover:text-highlight focus:text-highlight";
+    "text-textcol dark:text-textcol-dark transition-colors hover:text-highlight dark:hover:text-highlight-dark focus:text-highlight";
 
   // Parse text with [[Ferret Name]] patterns and convert to clickable links
   const parseFerretLinks = (text: string | undefined): ReactNode => {
@@ -191,7 +191,7 @@ export default function FerretCard(props: FerretCardProps) {
       {birthday && <Confetti onInit={confettiInit} />}
       <div
         className={classes(
-          "relative flex max-h-full min-h-[min(28rem,100%)] w-96 max-w-full flex-col justify-start rounded-lg bg-tan align-top text-xs shadow-xl",
+          "relative flex max-h-full min-h-[min(28rem,100%)] w-80 max-w-full flex-col justify-start rounded-lg bg-framecol align-top text-xs shadow-xl dark:bg-framecol-dark",
           className,
         )}
         ref={callbackRef}
@@ -215,7 +215,7 @@ export default function FerretCard(props: FerretCardProps) {
           loading="lazy"
         />
 
-        <div className="relative flex w-full items-center justify-center bg-tan-alt px-8 py-1">
+        <div className="relative flex w-full items-center justify-center bg-tan-alt px-8 py-1 dark:bg-chocolate-alt">
           {onClose && (
             <button
               className="absolute left-0 p-1 transition-colors hover:text-highlight active:text-highlight sm:hidden"
@@ -229,7 +229,7 @@ export default function FerretCard(props: FerretCardProps) {
 
           <h2 className="text-text text-base text-balance">{ferret.name}</h2>
         </div>
-        <div className="mb-2 scrollbar-thin flex flex-auto flex-col gap-1 overflow-y-auto p-2 scrollbar-thumb-chocolate-alt scrollbar-track-tan-alt">
+        <div className="mb-2 scrollbar-thin flex flex-auto flex-col gap-1 overflow-y-auto p-2 scrollbar-thumb-chocolate-alt scrollbar-track-tan-alt dark:scrollbar-thumb-chocolate dark:scrollbar-track-chocolate-alt">
           {mod && (
             <div className="flex items-center gap-2">
               <img

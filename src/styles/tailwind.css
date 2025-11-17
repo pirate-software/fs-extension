@@ -3,7 +3,21 @@
 
 @import "https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;1,400&family=PT+Serif:ital,wght@0,700&display=swap";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: "Plump";
+  src: url("../assets/Plump.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @plugin "tailwind-scrollbar";
+
+/* Apply letter spacing to Plump font */
+.font-serif {
+  letter-spacing: 0.5px;
+}
 
 /* FIXME: https://github.com/tailwindlabs/tailwindcss/discussions/15253 */
 @theme inline {
@@ -11,7 +25,8 @@
     "PT Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif:
-    "PT Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    "Plump", "PT Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times,
+    serif;
 }
 
 @theme {

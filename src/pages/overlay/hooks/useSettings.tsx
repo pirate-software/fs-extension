@@ -38,6 +38,16 @@ const settings = {
     },
     configurable: false,
   },
+  theme: {
+    title: "Theme",
+    type: "string",
+    process: (value: any): "light" | "dark" | "auto" => {
+      if (value === "light" || value === "dark" || value === "auto")
+        return value;
+      return "auto";
+    },
+    configurable: true,
+  },
 };
 
 type SettingsKey = keyof typeof settings;
@@ -69,6 +79,18 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     localStorage.setItem("settings", JSON.stringify(stored));
   }, [stored]);
+
+  // Set theme
+  useEffect(() => {
+    const theme = stored.theme;
+
+    const isDark =
+      theme === "dark" ||
+      (theme === "auto" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+    document.documentElement.classList.toggle("dark", isDark);
+  }, [stored.theme]);
 
   // Change the value of a setting
   const change = useCallback(

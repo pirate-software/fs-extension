@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    @apply h-screen w-screen overflow-hidden bg-tan font-sans text-chocolate-deep;
+    @apply h-screen w-screen overflow-hidden bg-framecol font-sans text-chocolate-deep dark:bg-framecol-dark;
   }
 
   #root {

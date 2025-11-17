@@ -23,7 +23,7 @@ export default function Toggle(props: ToggleProps) {
       <span className="relative">
         <input
           type="checkbox"
-          className="peer block h-6 w-6 cursor-pointer appearance-none rounded-lg border-none bg-bgcol outline-highlight transition-[outline] group-focus-within:outline-3 group-hover:outline-3"
+          className="peer block h-6 w-6 cursor-pointer appearance-none rounded-lg border-none bg-bgcol outline-highlight transition-[outline] group-focus-within:outline-3 group-hover:outline-3 dark:bg-bgcol-dark"
           onChange={onChangeNative}
           checked={value}
         />
