@@ -131,7 +131,7 @@ export default function FerretCard(props: FerretCardProps) {
   const linkClass =
     "text-textcol dark:text-textcol-dark transition-colors hover:text-highlight dark:hover:text-highlight-dark focus:text-highlight";
 
-  // Parse text with [[Ferret Name]] patterns and convert to clickable links
+  // Parse text with [[Ferret Name]] or [[Ferret Name|Display Text]] patterns and convert to clickable links
   const parseFerretLinks = (text: string | undefined): ReactNode => {
     if (!text || !allFerrets) return text;
 
