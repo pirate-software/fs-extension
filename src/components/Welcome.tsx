@@ -115,7 +115,7 @@ export default function Welcome(props: WelcomeProps) {
         </li>
         <li className={socialClass}>
           <a
-            href="https://www.tiktok.com/@ferretposting"
+            href="https://tiktok.com/@ferretslive"
             rel="noreferrer"
             target="_blank"
             title="Ferrets on TikTok"
