@@ -118,7 +118,7 @@ export default function Settings(props: OverlayOptionProps) {
             <IconExternal className="mb-0.5 inline-block" size={12} />
           </a>
           <br />
-          Emotes and other images subject to copyright
+          Emotes and other images/icons subject to copyright
           <hr className={hrClass} />
           For all enquiries, please open a{" "}
           <span className="italic">#mod-ticket</span> on&nbsp;

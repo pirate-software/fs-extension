@@ -29,13 +29,14 @@ import FerretsOverlay from "./Ferrets";
 import SettingsOverlay from "./Settings";
 
 import Buttons, { type ButtonsOption } from "../Buttons";
+import IconRainbow from "../../../../components/icons/IconRainbow";
 
 // Show command-triggered popups for 10s
 const commandTimeout = 10_000;
 
 type OverlayOption = ButtonsOption & {
   component: (props: OverlayOptionProps) => JSX.Element;
-  condition?: (props: { ferrets: ReturnType<typeof useFerrets> }) => boolean;
+  condition?: (props: { ferrets: ReturnType<typeof useFerrets> }) => boolean; // condition for the option to be shown
 };
 
 const overlayOptions = [
@@ -43,7 +44,7 @@ const overlayOptions = [
     key: "welcome",
     type: "primary",
     icon: IconWelcome,
-    title: "Welcome to Ferret Software",
+    title: "Welcome",
     component: (props) => (
       <Welcome
         {...props}
@@ -55,9 +56,31 @@ const overlayOptions = [
     key: "ferrets",
     type: "primary",
     icon: IconFerrets,
-    title: "Meet the Ferrets",
-    component: FerretsOverlay,
-    condition: ({ ferrets }) => Object.values(ferrets ?? {}).some(() => true),
+    title: "Playgroups",
+    component: (props) => (
+      <FerretsOverlay
+        {...props}
+        showPlaygroupSelector={true}
+        filterFerrets={(f) => f.playgroup !== "valhalla"}
+      />
+    ),
+    condition: ({ ferrets }) =>
+      Object.values(ferrets ?? {}).some((f) => f.playgroup !== "valhalla"),
+  },
+  {
+    key: "valhalla",
+    type: "primary",
+    icon: IconRainbow,
+    title: "Valhalla",
+    component: (props) => (
+      <FerretsOverlay
+        {...props}
+        showPlaygroupSelector={false}
+        filterFerrets={(f) => f.playgroup === "valhalla"}
+      />
+    ),
+    condition: ({ ferrets }) =>
+      Object.values(ferrets ?? {}).some((f) => f.playgroup === "valhalla"),
   },
   {
     key: "settings",

@@ -13,7 +13,6 @@ import { z } from "zod";
 import allFerrets, {
   ferretSchema,
 } from "@pirate-software/fs-data/build/ferrets/core";
-import { isAliveFerretEntry } from "@pirate-software/fs-data/build/ferrets/filters";
 import {
   getFerretMugshot,
   ferretImageSchema,
@@ -86,19 +85,17 @@ const fetchFerrets = async (): Promise<Record<string, Ferret>> => {
 };
 
 const fallbackFerrets: Record<string, Ferret> = typeSafeObjectFromEntries(
-  typeSafeObjectEntries(allFerrets)
-    .filter(isAliveFerretEntry)
-    .map<[string, Ferret]>(([key, val]) => {
-      const mugshot = getFerretMugshot(key) ?? fallbackMugshot;
+  typeSafeObjectEntries(allFerrets).map<[string, Ferret]>(([key, val]) => {
+    const mugshot = getFerretMugshot(key) ?? fallbackMugshot;
 
-      return [
-        key,
-        {
-          ...val,
-          mugshot,
-        },
-      ];
-    }),
+    return [
+      key,
+      {
+        ...val,
+        mugshot,
+      },
+    ];
+  }),
 );
 
 // Use a context to fetch the ferrets from the API
@@ -113,7 +110,8 @@ export const FerretsProvider = ({
   // On mount, attempt to fetch the ferrets from the API
   // If we can't fetch the ferrets, use the data from the data package
   useEffect(() => {
-    // setFerrets(fallbackFerrets);
+    setFerrets(fallbackFerrets); //TEMP REMOVE
+    return; //TEMP REMOVE
     fetchFerrets()
       .catch((err) => {
         console.error(err);

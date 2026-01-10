@@ -18,11 +18,11 @@ import Ring from "../../../../components/Ring";
 import { useFerrets as useFerrets } from "../../../../hooks/useFerrets";
 import { classes } from "../../../../utils/classes";
 import { typeSafeObjectEntries } from "../../../../utils/helpers";
-import { sortPartialDates } from "../../../../utils/dateManager";
 
 import type { OverlayOptionProps } from "./Overlay";
 
 import IconChevron from "../../../../components/icons/IconChevron";
+import type { Ferret } from "@pirate-software/fs-data/build/ferrets/core";
 
 const arrowClass =
   "absolute border-0 cursor-pointer text-chocolate-deep w-full h-[var(--list-fade-padding)] z-20 transition-opacity group pt-[var(--twitch-vertical-padding)] box-content";
@@ -32,12 +32,17 @@ const arrowPathClass =
   "[&_path]:stroke-tan [&_path]:stroke-[0.25rem] [&_path]:[paint-order:stroke] [&_path]:transition-[stroke] [&_path]:group-hover:stroke-highlight [&_path]:group-hover:stroke-[0.375rem] [&_path]:group-focus:stroke-highlight [&_path]:group-focus:stroke-[0.375rem]";
 const hiddenClass = "opacity-0 pointer-events-none";
 
-type FerretsProps = OverlayOptionProps;
+export interface FerretsProps extends OverlayOptionProps {
+  filterFerrets?: (ferret: Ferret) => boolean;
+  showPlaygroupSelector: boolean;
+}
 
 export default function Ferrets(props: FerretsProps) {
   const {
     context: { activeFerret: activeFerret, setActiveFerret: setActiveFerret },
     className,
+    filterFerrets,
+    showPlaygroupSelector,
   } = props;
 
   const [selectedPlaygroup, setSelectedPlaygroup] = useState<string>("all");
@@ -47,11 +52,12 @@ export default function Ferrets(props: FerretsProps) {
       typeSafeObjectEntries(rawFerrets ?? {})
         .filter(
           ([, ferret]) =>
-            selectedPlaygroup === "all" ||
-            ferret.playgroup === selectedPlaygroup,
+            (selectedPlaygroup === "all" ||
+              ferret.playgroup === selectedPlaygroup) &&
+            (filterFerrets ? filterFerrets(ferret) : true),
         )
-        .sort(([, a], [, b]) => sortPartialDates(a.arrival, b.arrival)),
-    [rawFerrets, selectedPlaygroup],
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
+    [rawFerrets, selectedPlaygroup, filterFerrets],
   );
 
   const upArrowRef = useRef<HTMLButtonElement>(null);
@@ -236,48 +242,47 @@ export default function Ferrets(props: FerretsProps) {
             );
           }}
         >
-          <div ref={playgroupSelector} className="sticky top-0 z-30 w-full">
-            {/* Extra div needed to add padding for dropdown arrow. Makes the dropdown box position funky though */}
-            <div
-              className="transition-ring relative w-full rounded-lg bg-framecol px-2 py-1 pr-1 dark:bg-framecol-dark"
-              data-at-top="true"
-            >
-              <Ring thickBottom={false} className="rounded-lg" />
-              <select
-                className="text-text mx-auto block w-full bg-framecol text-sm dark:bg-framecol-dark"
-                value={selectedPlaygroup}
-                onChange={(e) => setSelectedPlaygroup(e.target.value)}
+          {showPlaygroupSelector && (
+            <div ref={playgroupSelector} className="sticky top-0 z-30 w-full">
+              {/* Extra div needed to add padding for dropdown arrow. Makes the dropdown box position funky though */}
+              <div
+                className="transition-ring relative w-full rounded-lg bg-framecol px-2 py-1 pr-1 dark:bg-framecol-dark"
+                data-at-top="true"
               >
-                <option value="all">All Playgroups</option>
-                {(Object.entries(playgroups) as [string, { name: string }][])
-                  .filter(
-                    ([, group]) => group.name !== playgroups.valhalla.name,
-                  )
-                  .filter(([playgroupKey]) =>
-                    Object.values(rawFerrets ?? {}).some(
-                      (ferret) => ferret.playgroup === playgroupKey,
-                    ),
-                  )
-                  .sort(([, a], [, b]) => {
-                    const prioGroups = new Set<string>([
-                      playgroups.genpop.name,
-                      playgroups.solo.name,
-                    ]); // genpop and solo first in list
-                    return prioGroups.has(String(a.name)) ===
-                      prioGroups.has(String(b.name))
-                      ? a.name.localeCompare(b.name)
-                      : prioGroups.has(String(a.name))
-                        ? -1
-                        : 1;
-                  })
-                  .map(([key, group]) => (
-                    <option key={key} value={key}>
-                      {group.name}
-                    </option>
-                  ))}
-              </select>
+                <Ring thickBottom={false} className="rounded-lg" />
+                <select
+                  className="text-text mx-auto block w-full border-0 bg-framecol text-sm outline-0 dark:bg-framecol-dark"
+                  value={selectedPlaygroup}
+                  onChange={(e) => setSelectedPlaygroup(e.target.value)}
+                >
+                  <option value="all">All Playgroups</option>
+                  {(Object.entries(playgroups) as [string, { name: string }][]) //TODO: this is quite messy. the function is to ensure playgroups are ordered as all, genpop, solo, then rest alphabetical a-z.
+                    .filter(([playgroupKey]) =>
+                      Object.values(rawFerrets ?? {}).some(
+                        (ferret) => ferret.playgroup === playgroupKey,
+                      ),
+                    )
+                    .sort(([, a], [, b]) => {
+                      const prioGroups = new Set<string>([
+                        playgroups.genpop.name,
+                        playgroups.solo.name,
+                      ]); // genpop and solo first in list
+                      return prioGroups.has(String(a.name)) ===
+                        prioGroups.has(String(b.name))
+                        ? a.name.localeCompare(b.name)
+                        : prioGroups.has(String(a.name))
+                          ? -1
+                          : 1;
+                    })
+                    .map(([key, group]) => (
+                      <option key={key} value={key}>
+                        {group.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
             </div>
-          </div>
+          )}
           {ferrets.map(([key]) => (
             <FerretButton
               key={key}
@@ -321,7 +326,7 @@ export default function Ferrets(props: FerretsProps) {
         </button>
       </div>
 
-      {ferrets.sort().map(([key]) => (
+      {ferrets.map(([key]) => (
         <Transition show={activeFerret.key === key} key={key}>
           <FerretCard
             key={key}
