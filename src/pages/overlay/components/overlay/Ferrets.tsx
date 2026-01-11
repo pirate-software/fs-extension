@@ -33,7 +33,7 @@ const arrowPathClass =
 const hiddenClass = "opacity-0 pointer-events-none";
 
 export interface FerretsProps extends OverlayOptionProps {
-  filterFerrets?: (ferret: Ferret) => boolean;
+  availablePlaygroups: string[];
   showPlaygroupSelector: boolean;
 }
 
@@ -41,23 +41,31 @@ export default function Ferrets(props: FerretsProps) {
   const {
     context: { activeFerret: activeFerret, setActiveFerret: setActiveFerret },
     className,
-    filterFerrets,
+    availablePlaygroups,
     showPlaygroupSelector,
   } = props;
 
   const [selectedPlaygroup, setSelectedPlaygroup] = useState<string>("all");
-  const rawFerrets = useFerrets();
-  const ferrets = useMemo(
+  const rawFerrets = useFerrets(); // all ferrets, unfiltered
+  const filteredFerrets = useMemo((): Record<string, Ferret> => {
+    // only ferrets which can be shown in this menu according to filterFerrets
+    return Object.fromEntries(
+      typeSafeObjectEntries(rawFerrets ?? {}).filter(([, ferret]) =>
+        availablePlaygroups.includes(ferret.playgroup),
+      ),
+    );
+  }, [rawFerrets, availablePlaygroups]);
+  const selectedFerrets = useMemo(
+    // only ferrets in the selected playgroup
     () =>
-      typeSafeObjectEntries(rawFerrets ?? {})
+      typeSafeObjectEntries(filteredFerrets ?? {})
         .filter(
           ([, ferret]) =>
-            (selectedPlaygroup === "all" ||
-              ferret.playgroup === selectedPlaygroup) &&
-            (filterFerrets ? filterFerrets(ferret) : true),
+            selectedPlaygroup === "all" ||
+            ferret.playgroup === selectedPlaygroup,
         )
         .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
-    [rawFerrets, selectedPlaygroup, filterFerrets],
+    [filteredFerrets, selectedPlaygroup],
   );
 
   const upArrowRef = useRef<HTMLButtonElement>(null);
@@ -134,13 +142,15 @@ export default function Ferrets(props: FerretsProps) {
     // If the window is resized, check the arrow visibility again
     window.addEventListener("resize", handleArrowVisibility);
     return () => window.removeEventListener("resize", handleArrowVisibility);
-  }, [handleArrowVisibility, ferrets]);
+  }, [handleArrowVisibility, selectedFerrets]);
 
   // When changing playgroup, trigger event (used by FerretCard)
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<string>).detail;
-      if (detail) setSelectedPlaygroup(detail);
+      if (detail !== "valhalla") {
+        if (detail) setSelectedPlaygroup(detail);
+      }
     };
 
     window.addEventListener("fsext:selectPlaygroup", handler as EventListener);
@@ -202,7 +212,7 @@ export default function Ferrets(props: FerretsProps) {
 
     // If ferret in selected playgroup, scroll to it
     if (activeFerret.key) {
-      const found = ferrets.find(([key]) => key === activeFerret.key);
+      const found = selectedFerrets.find(([key]) => key === activeFerret.key);
       if (
         found &&
         (selectedPlaygroup === "all" ||
@@ -219,7 +229,7 @@ export default function Ferrets(props: FerretsProps) {
     // Trigger arrow buttons update
     const t = window.setTimeout(() => handleArrowVisibility(), 200);
     return () => window.clearTimeout(t);
-  }, [selectedPlaygroup, ferrets, handleArrowVisibility]);
+  }, [selectedPlaygroup, selectedFerrets, handleArrowVisibility]);
 
   return (
     <div
@@ -258,7 +268,7 @@ export default function Ferrets(props: FerretsProps) {
                   <option value="all">All Playgroups</option>
                   {(Object.entries(playgroups) as [string, { name: string }][]) //TODO: this is quite messy. the function is to ensure playgroups are ordered as all, genpop, solo, then rest alphabetical a-z.
                     .filter(([playgroupKey]) =>
-                      Object.values(rawFerrets ?? {}).some(
+                      Object.values(filteredFerrets ?? {}).some(
                         (ferret) => ferret.playgroup === playgroupKey,
                       ),
                     )
@@ -283,7 +293,7 @@ export default function Ferrets(props: FerretsProps) {
               </div>
             </div>
           )}
-          {ferrets.map(([key]) => (
+          {selectedFerrets.map(([key]) => (
             <FerretButton
               key={key}
               ferret={key}
@@ -326,7 +336,7 @@ export default function Ferrets(props: FerretsProps) {
         </button>
       </div>
 
-      {ferrets.map(([key]) => (
+      {selectedFerrets.map(([key]) => (
         <Transition show={activeFerret.key === key} key={key}>
           <FerretCard
             key={key}

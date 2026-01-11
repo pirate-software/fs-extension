@@ -16,7 +16,7 @@ import IconWelcome from "../../../../components/icons/IconWelcome";
 import IconFerrets from "../../../../components/icons/IconFerrets";
 import IconSettings from "../../../../components/icons/IconSettings";
 
-import { useFerrets } from "../../../../hooks/useFerrets";
+import { isAliveFerret, useFerrets } from "../../../../hooks/useFerrets";
 import { classes } from "../../../../utils/classes";
 import { visibleUnderCursor } from "../../../../utils/dom";
 
@@ -30,6 +30,7 @@ import SettingsOverlay from "./Settings";
 
 import Buttons, { type ButtonsOption } from "../Buttons";
 import IconRainbow from "../../../../components/icons/IconRainbow";
+import playgroups from "@pirate-software/fs-data/build/playgroups";
 
 // Show command-triggered popups for 10s
 const commandTimeout = 10_000;
@@ -61,11 +62,13 @@ const overlayOptions = [
       <FerretsOverlay
         {...props}
         showPlaygroupSelector={true}
-        filterFerrets={(f) => f.playgroup !== "valhalla"}
+        availablePlaygroups={Object.keys(playgroups).filter(
+          (pg) => pg !== "valhalla",
+        )}
       />
     ),
     condition: ({ ferrets }) =>
-      Object.values(ferrets ?? {}).some((f) => f.playgroup !== "valhalla"),
+      Object.values(ferrets ?? {}).some(isAliveFerret),
   },
   {
     key: "valhalla",
@@ -76,11 +79,11 @@ const overlayOptions = [
       <FerretsOverlay
         {...props}
         showPlaygroupSelector={false}
-        filterFerrets={(f) => f.playgroup === "valhalla"}
+        availablePlaygroups={["valhalla"]}
       />
     ),
     condition: ({ ferrets }) =>
-      Object.values(ferrets ?? {}).some((f) => f.playgroup === "valhalla"),
+      Object.values(ferrets ?? {}).some((f) => !isAliveFerret(f)),
   },
   {
     key: "settings",
@@ -232,6 +235,14 @@ export default function Overlay() {
     }),
     [activeFerret],
   );
+
+  // Set visible option to relevant tab when activeFerret changes
+  useEffect(() => {
+    if (!activeFerret) return;
+    const ferret = ferrets?.[activeFerret.key ?? ""];
+    if (!ferret) return;
+    setVisibleOption(ferret.playgroup === "valhalla" ? "valhalla" : "ferrets"); //TODO: the list of playgroups per option isn't exposed since it's part of the result of the compoment function, would probably need more refactoring to support multiple playgroup-specific tabs, but since that's not likely to be needed, this bodge will do.
+  }, [activeFerret]);
 
   return (
     <div

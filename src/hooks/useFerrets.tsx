@@ -166,3 +166,7 @@ export const useFerret = (key: string) => {
   const ferrets = useFerrets();
   return ferrets?.[key];
 };
+
+export const isAliveFerret = (f: { playgroup: string }) => {
+  return f.playgroup !== "valhalla";
+};

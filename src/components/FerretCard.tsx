@@ -16,7 +16,7 @@ import {
   formatBirthday,
   isBirthday,
 } from "../utils/dateManager";
-import { useFerret, useFerrets } from "../hooks/useFerrets";
+import { isAliveFerret, useFerret, useFerrets } from "../hooks/useFerrets";
 import { classes } from "../utils/classes";
 
 import IconBack from "./icons/IconBack";
@@ -229,7 +229,11 @@ export default function FerretCard(props: FerretCardProps) {
             </button>
           )}
 
-          <h2 className="text-text text-base text-balance">{ferret.name}</h2>
+          <h2 className="text-text text-base text-balance">
+            {ferret.name}
+            {birthday ? " 🎉" : ""}
+            {!isAliveFerret(ferret) ? " 🌈" : ""}
+          </h2>
         </div>
         <div className="mb-2 scrollbar-thin flex flex-auto flex-col gap-1 overflow-y-auto p-2 scrollbar-thumb-chocolate-alt scrollbar-track-tan-alt dark:scrollbar-thumb-chocolate dark:scrollbar-track-chocolate-alt">
           {mod && (
@@ -260,17 +264,26 @@ export default function FerretCard(props: FerretCardProps) {
               <h3 className={headingClass}>Sex</h3>
               <p>{ferret.sex || "Unknown"}</p>
             </div>
-            <div>
-              <h3 className={headingClass}>Age</h3>
-              <p>
-                {age[0] === "~" && (
-                  <span className="text-base leading-none" title="Approx.">
-                    ~
-                  </span>
-                )}
-                {age.slice(age[0] === "~" ? 1 : 0)}
-              </p>
-            </div>
+            {isAliveFerret(ferret) ? (
+              <div>
+                <h3 className={headingClass}>Age</h3>
+                <p>
+                  {age[0] === "~" && (
+                    <span className="text-base leading-none" title="Approx.">
+                      ~
+                    </span>
+                  )}
+                  {age.slice(age[0] === "~" ? 1 : 0)}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <h3 className={headingClass}>Valhalla Date</h3>
+                <p>
+                  {ferret.valhalla ? formatDate(ferret.valhalla) : "Unknown"}
+                </p>
+              </div>
+            )}
             <div>
               <h3 className={headingClass}>Birthday</h3>
               <p>
