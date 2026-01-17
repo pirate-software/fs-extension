@@ -11,12 +11,19 @@ import useChatCommand from "../../../hooks/useChatCommand";
 import { typeSafeObjectEntries } from "../../../utils/helpers";
 
 import Overlay from "./Overlay";
+import useSettings from "../hooks/useSettings";
 
 export default function Ferrets() {
   const rawFerrets = useFerrets();
+  const settings = useSettings();
+  const valhallaMode = settings.valhallaMode.value;
+
   const ferrets = useMemo(
-    () => typeSafeObjectEntries(rawFerrets ?? {}),
-    [rawFerrets],
+    () =>
+      typeSafeObjectEntries(rawFerrets ?? {}).filter(([, f]) =>
+        valhallaMode ? f.playgroup === "valhalla" : f.playgroup !== "valhalla",
+      ),
+    [rawFerrets, valhallaMode],
   );
 
   // Allow chat commands to select a ferret, as well as the user

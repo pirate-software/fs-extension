@@ -256,12 +256,12 @@ export default function Ferrets(props: FerretsProps) {
             <div ref={playgroupSelector} className="sticky top-0 z-30 w-full">
               {/* Extra div needed to add padding for dropdown arrow. Makes the dropdown box position funky though */}
               <div
-                className="transition-ring relative w-full rounded-lg bg-framecol px-2 py-1 pr-1 dark:bg-framecol-dark"
+                className="transition-ring relative w-full rounded-lg bg-framecol pr-1 dark:bg-framecol-dark"
                 data-at-top="true"
               >
                 <Ring thickBottom={false} className="rounded-lg" />
                 <select
-                  className="text-text mx-auto block w-full border-0 bg-framecol text-sm outline-0 dark:bg-framecol-dark"
+                  className="text-text mx-auto block w-full rounded-lg border-0 bg-framecol px-2 py-1 text-sm outline-0 dark:bg-framecol-dark"
                   value={selectedPlaygroup}
                   onChange={(e) => setSelectedPlaygroup(e.target.value)}
                 >

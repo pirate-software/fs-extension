@@ -129,7 +129,7 @@ export default function FerretCard(props: FerretCardProps) {
 
   if (!ferret) return null;
 
-  const wikiUrl = `https://ferrets.piratesoftware.wiki/wiki/${ferret.wikipage}`;
+  const wikiUrl = `https://ferrets.piratesoftware.wiki/${ferret.wikipage}`;
   const linkClass =
     "text-textcol dark:text-textcol-dark transition-colors hover:text-highlight dark:hover:text-highlight-dark focus:text-highlight";
 
@@ -186,6 +186,20 @@ export default function FerretCard(props: FerretCardProps) {
     }
 
     return parts.length > 0 ? parts : text;
+  };
+
+  // Trim descriptions without trimming in the middle of a link
+  const safeTrim = (text: string, maxLength: number): string => {
+    if (text.length <= maxLength) return text;
+
+    let trimmed = text.slice(0, maxLength);
+    const lastOpenBracket = trimmed.lastIndexOf("[[");
+    const lastCloseBracket = trimmed.lastIndexOf("]]");
+    if (lastOpenBracket > lastCloseBracket) {
+      trimmed = trimmed.slice(0, lastOpenBracket);
+    }
+
+    return trimmed.trimEnd();
   };
 
   return (
@@ -308,7 +322,7 @@ export default function FerretCard(props: FerretCardProps) {
               <p>
                 {ferret.lore.length > 500 ? (
                   <>
-                    {parseFerretLinks(ferret.lore.slice(0, 500).trimEnd())}...{" "}
+                    {parseFerretLinks(safeTrim(ferret.lore, 500))}...{" "}
                     <a
                       href={`${wikiUrl}#Lore`}
                       rel="noreferrer"

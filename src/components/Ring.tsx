@@ -16,7 +16,7 @@ export default function Ring({
   return (
     <div
       className={classes(
-        "pointer-events-none absolute -inset-0 border-2 border-outlinecol ring-1 ring-outlinecol transition-colors",
+        "pointer-events-none absolute inset-0 border-2 border-outlinecol ring-1 ring-outlinecol transition-colors",
         active && "bg-black/25",
         // active
         //   ? "border-outlinecol"

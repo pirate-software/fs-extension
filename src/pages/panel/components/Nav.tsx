@@ -7,6 +7,7 @@ import logo from "../../../assets/logo.png";
 import IconInfo from "../../../components/icons/IconInfo";
 import Welcome from "../../../components/Welcome";
 import ThemeToggle from "./ThemeToggle";
+import ValhallaToggle from "./ValhallaToggle";
 
 import Overlay from "./Overlay";
 
@@ -18,6 +19,7 @@ export default function Nav() {
       <img className="h-8 w-auto" src={logo} alt="Ferret Software Logo" />
       <h1 className="text-lg">Ferret Software</h1>
       <div className="ml-auto flex items-center gap-2 sm:absolute sm:right-4 sm:ml-0">
+        <ValhallaToggle />
         <ThemeToggle />
         <button
           className="group -mr-2 rounded-full p-2"

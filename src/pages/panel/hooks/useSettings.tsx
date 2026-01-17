@@ -26,6 +26,15 @@ const settings = {
     },
     configurable: true,
   },
+  valhallaMode: {
+    title: "Show Valhalla Ferrets",
+    type: "boolean",
+    process: (value: any): boolean => {
+      if (typeof value === "boolean") return value;
+      return false;
+    },
+    configurable: false,
+  },
 };
 
 type SettingsKey = keyof typeof settings;
