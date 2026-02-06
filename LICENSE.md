@@ -6,16 +6,17 @@ Version 2.0.
 Original code copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team
 <opensource@alveussanctuary.org>
 
-Modifications copyright 2025 Pirate Software
+Modifications copyright 2026 Pirate Software
 <gopiratesoftware@gmail.com>
 
-This license does not apply to any fonts, images or other media contained within the
-project. These remain the property of their respective owners. Please contact the
-Pirate Software team if you wish to license any images or other media for use in
-your own projects, or if you have any questions about the license.
+This license does not apply to any fonts, images or other media contained
+within the project. These remain the property of their respective owners.
 
-The perferred way to do this is via the [Discord](https://discord.gg/piratesoftware) in
-a mod ticket.
+Please contact the Pirate Software team if you wish to license any images
+or other media for use in your own projects, or if you have any questions about
+the license. The preferred way to do this is via the Pirate Software Discord
+Server in a mod ticket.
+[https://discord.gg/piratesoftware](https://discord.gg/piratesoftware)
 
 ## Apache License
 
