@@ -8,14 +8,13 @@ import {
   useState,
   type MouseEvent,
 } from "react";
-import playgroups from "@pirate-software/fs-data/build/playgroups";
 import { Transition } from "@headlessui/react";
 
 import FerretCard from "../../../../components/FerretCard";
 import FerretButton from "../../../../components/FerrretButton";
 import Ring from "../../../../components/Ring";
 
-import { useFerrets as useFerrets } from "../../../../hooks/useFerrets";
+import { useFerrets, usePlaygroups } from "../../../../hooks/useFerrets";
 import { classes } from "../../../../utils/classes";
 import { typeSafeObjectEntries } from "../../../../utils/helpers";
 
@@ -47,10 +46,11 @@ export default function Ferrets(props: FerretsProps) {
 
   const [selectedPlaygroup, setSelectedPlaygroup] = useState<string>("all");
   const rawFerrets = useFerrets(); // all ferrets, unfiltered
+  const playgroups = usePlaygroups();
   const filteredFerrets = useMemo((): Record<string, Ferret> => {
     // only ferrets which can be shown in this menu according to filterFerrets
     return Object.fromEntries(
-      typeSafeObjectEntries(rawFerrets ?? {}).filter(([, ferret]) =>
+      typeSafeObjectEntries(rawFerrets).filter(([, ferret]) =>
         availablePlaygroups.includes(ferret.playgroup),
       ),
     );
@@ -58,7 +58,7 @@ export default function Ferrets(props: FerretsProps) {
   const selectedFerrets = useMemo(
     // only ferrets in the selected playgroup
     () =>
-      typeSafeObjectEntries(filteredFerrets ?? {})
+      typeSafeObjectEntries(filteredFerrets)
         .filter(
           ([, ferret]) =>
             selectedPlaygroup === "all" ||
@@ -273,10 +273,7 @@ export default function Ferrets(props: FerretsProps) {
                       ),
                     )
                     .sort(([, a], [, b]) => {
-                      const prioGroups = new Set<string>([
-                        playgroups.genpop.name,
-                        playgroups.solo.name,
-                      ]); // genpop and solo first in list
+                      const prioGroups = new Set<string>(["Gen. Pop.", "Solo"]); // genpop and solo first in list
                       return prioGroups.has(String(a.name)) ===
                         prioGroups.has(String(b.name))
                         ? a.name.localeCompare(b.name)

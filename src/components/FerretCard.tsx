@@ -16,7 +16,12 @@ import {
   formatBirthday,
   isBirthday,
 } from "../utils/dateManager";
-import { isAliveFerret, useFerret, useFerrets } from "../hooks/useFerrets";
+import {
+  isAliveFerret,
+  useFerret,
+  useFerrets,
+  usePlaygroup,
+} from "../hooks/useFerrets";
 import { classes } from "../utils/classes";
 
 import IconBack from "./icons/IconBack";
@@ -26,7 +31,6 @@ import Ring from "./Ring";
 
 import moderatorBadge from "../assets/mod.svg";
 import partyHat from "../assets/party.svg";
-import playgroups from "@pirate-software/fs-data/build/playgroups";
 import IconInfo from "./icons/IconInfo";
 import Tooltip from "./Tooltip";
 
@@ -43,6 +47,7 @@ export interface FerretCardProps {
 export default function FerretCard(props: FerretCardProps) {
   const { ferret: ferretKey, onClose, className, ref, ...extras } = props;
   const ferret = useFerret(ferretKey);
+  const playgroup = ferret ? usePlaygroup(ferret!.playgroup) : null;
   const allFerrets = useFerrets();
 
   const mod =
@@ -223,11 +228,8 @@ export default function FerretCard(props: FerretCardProps) {
         )}
         <img
           className="max-h-48 w-full rounded-t-lg object-cover transition-[max-height] duration-700 ease-in-out hover:max-h-96 active:max-h-96"
-          src={ferret.mugshot.src}
-          alt={ferret.mugshot.alt}
-          style={{
-            objectPosition: ferret.mugshot.position,
-          }}
+          src={ferret.mugshot}
+          alt={`Mugshot of ${ferret.name}`}
           loading="lazy"
         />
 
@@ -342,7 +344,7 @@ export default function FerretCard(props: FerretCardProps) {
           <div className={rowClass}>
             <div>
               <h3 className={headingClass}>Playgroup</h3>
-              <Tooltip text={playgroups[ferret.playgroup].description}>
+              <Tooltip text={playgroup?.tooltip ?? "No description available"}>
                 <a
                   href="#"
                   onClick={(e) => {
@@ -354,9 +356,9 @@ export default function FerretCard(props: FerretCardProps) {
                     );
                   }}
                   className={`inline-flex items-center gap-1 text-left no-underline ${linkClass} hover:underline`}
-                  aria-label={`Filter by ${playgroups[ferret.playgroup].name}`}
+                  aria-label={`Filter by ${playgroup?.name}`}
                 >
-                  {playgroups[ferret.playgroup].name}
+                  {playgroup?.name}
                   <IconInfo
                     size={15}
                     className="rounded-full outline-highlight transition-[outline] hover:outline-3"

@@ -37,7 +37,7 @@ export default function useChatCommand(callback: (command: string) => void) {
             ...(channel ? [channel] : defaultChannelNames),
             // If we're not in a default channel, connect to the extra channels.
             // Extra channels are used for mod control during collaborations,
-            //  so we don't need to connect to them if we're in a default channel.
+            // so we don't need to connect to them if we're in a default channel.
             ...(channel && !defaultChannelNames.includes(channel)
               ? extraChannelNames
               : []),

@@ -14,3 +14,6 @@ build
 # IDEs
 .idea
 .vscode
+
+# Custom
+src/assets/fallbackData.json

@@ -2,10 +2,9 @@
 
 import { type MouseEventHandler } from "react";
 
-import { useFerret } from "../hooks/useFerrets";
+import { useFerret, usePlaygroup } from "../hooks/useFerrets";
 import { classes } from "../utils/classes";
 import Ring from "./Ring";
-import playgroups from "@pirate-software/fs-data/build/playgroups";
 
 interface FerretButtonProps {
   ferret: string;
@@ -16,9 +15,11 @@ interface FerretButtonProps {
 
 export default function FerretButton(props: FerretButtonProps) {
   const { ferret: ferretKey, onClick, active, className } = props;
-  const ferret = useFerret(ferretKey);
+  const ferretRaw = useFerret(ferretKey);
 
-  if (!ferret) return null;
+  if (!ferretRaw) return null;
+
+  const ferret = ferretRaw!;
 
   return (
     <button
@@ -32,16 +33,15 @@ export default function FerretButton(props: FerretButtonProps) {
     >
       <img
         className="aspect-[2.2] w-full shrink-0 rounded-t-lg object-cover"
-        src={ferret.mugshot.src}
-        alt={ferret.mugshot.alt}
-        style={{ objectPosition: ferret.mugshot.position }}
+        src={ferret.mugshot}
+        alt={`Mugshot of ${ferret.name}`}
         loading="lazy"
       />
 
       <div className="my-auto px-1 pt-2 pb-2">
         <h2 className="text-sm text-balance">{ferret.name}</h2>
         <h3 className="text-xs text-balance text-subtitlecol dark:text-subtitlecol-dark">
-          {playgroups[ferret.playgroup].name}
+          {usePlaygroup(ferret.playgroup)?.name}
         </h3>
       </div>
 

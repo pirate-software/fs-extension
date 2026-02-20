@@ -16,7 +16,11 @@ import IconWelcome from "../../../../components/icons/IconWelcome";
 import IconFerrets from "../../../../components/icons/IconFerrets";
 import IconSettings from "../../../../components/icons/IconSettings";
 
-import { isAliveFerret, useFerrets } from "../../../../hooks/useFerrets";
+import {
+  isAliveFerret,
+  useFerrets,
+  usePlaygroups,
+} from "../../../../hooks/useFerrets";
 import { classes } from "../../../../utils/classes";
 import { visibleUnderCursor } from "../../../../utils/dom";
 
@@ -30,7 +34,6 @@ import SettingsOverlay from "./Settings";
 
 import Buttons, { type ButtonsOption } from "../Buttons";
 import IconRainbow from "../../../../components/icons/IconRainbow";
-import playgroups from "@pirate-software/fs-data/build/playgroups";
 
 // Show command-triggered popups for 10s
 const commandTimeout = 10_000;
@@ -62,7 +65,7 @@ const overlayOptions = [
       <FerretsOverlay
         {...props}
         showPlaygroupSelector={true}
-        availablePlaygroups={Object.keys(playgroups).filter(
+        availablePlaygroups={Object.keys(usePlaygroups() ?? {}).filter(
           (pg) => pg !== "valhalla",
         )}
       />
