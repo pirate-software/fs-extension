@@ -27,7 +27,7 @@ const fetchMeta = async (): Promise<ApiMeta> => {
     throw new Error(
       `Failed to fetch ferrets metadata: ${metaResponse.status} ${metaResponse.statusText} ${await metaResponse.text()}`,
     );
-  const meta = apiMetaSchema.parse(metaResponse.json());
+  const meta = apiMetaSchema.parse(await metaResponse.json());
   return meta;
 };
 
