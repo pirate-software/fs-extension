@@ -10,14 +10,26 @@ import {
 
 import fallbackDataRaw from "../assets/fallbackData.json";
 import {
+  apiMetaSchema,
   ferretsApiSchema,
   SCHEMA_VERSION_ID,
+  type ApiMeta,
   type FerretsApiData,
 } from "@pirate-software/fs-data/build/api";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL?.replace(/\/+$/, "");
 if (!apiBaseUrl)
   throw new Error("REACT_APP_API_BASE_URL environment variable is not set");
+
+const fetchMeta = async (): Promise<ApiMeta> => {
+  const metaResponse = await fetch(`${apiBaseUrl}/ferrets.meta.json`);
+  if (!metaResponse.ok)
+    throw new Error(
+      `Failed to fetch ferrets metadata: ${metaResponse.status} ${metaResponse.statusText} ${await metaResponse.text()}`,
+    );
+  const meta = apiMetaSchema.parse(metaResponse.json());
+  return meta;
+};
 
 const fetchApi = async (): Promise<FerretsApiData> => {
   const response = await fetch(`${apiBaseUrl}/ferrets.json`);
@@ -62,13 +74,15 @@ export const FerretsProvider = ({
   children: React.ReactNode;
 }) => {
   const [data, setData] = useState<ContextType<typeof Context>>(null);
+  const [lastUpdated, setLastUpdated] = useState<string>("");
 
   // On mount, attempt to fetch the ferrets from the API
   // If we can't fetch the ferrets, use the data from the data package
   useEffect(() => {
-    // setData(fallbackFerrets); //TEMP FOR DEV
-    // return; //TEMP FOR DEV
-    fetchApi()
+    fetchMeta()
+      .then((meta) => setLastUpdated(meta.lastUpdated))
+      .catch((err) => console.error("Failed to fetch ferrets metadata", err));
+    fetchApi() // catch is before then so that if fetch failes, promise chain continues to use fallback data
       .catch((err) => {
         console.error(err);
         return fallbackData;
@@ -81,9 +95,21 @@ export const FerretsProvider = ({
   useEffect(() => {
     const interval = setInterval(
       () => {
-        fetchApi()
-          .then(setData)
-          .catch((err) => console.error(err));
+        fetchMeta()
+          .then((meta) => {
+            if (meta.lastUpdated !== lastUpdated) {
+              fetchApi()
+                .then(setData)
+                .catch((err) =>
+                  console.error("Failed to fetch ferrets API data", err),
+                );
+            } else {
+              setLastUpdated(meta.lastUpdated);
+            }
+          })
+          .catch((err) =>
+            console.error("Failed to fetch ferrets metadata", err),
+          );
       },
       2 * 60 * 60 * 1000,
     );
