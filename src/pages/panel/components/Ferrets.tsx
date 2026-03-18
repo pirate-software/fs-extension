@@ -3,7 +3,7 @@
 import { useState, useCallback, Fragment, useMemo } from "react";
 
 import FerretCard from "../../../components/FerretCard";
-import FerretButton from "../../../components/FerrretButton";
+import FerretButton from "../../../components/FerretButton";
 
 import { isAliveFerret, useFerrets } from "../../../hooks/useFerrets";
 

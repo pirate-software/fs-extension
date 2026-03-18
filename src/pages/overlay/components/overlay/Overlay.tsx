@@ -98,7 +98,7 @@ export type OverlayKey = (typeof overlayOptions)[number]["key"] | "";
 
 type ActiveCardState = {
   ferret?: string;
-  playgroup: string;
+  playgroup?: string;
   isCommand?: boolean;
 };
 

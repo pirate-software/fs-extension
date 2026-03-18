@@ -16,8 +16,8 @@ importers:
         specifier: ^2.2.9
         version: 2.2.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@pirate-software/fs-data':
-        specifier: link:..\fs-data
-        version: link:../fs-data
+        specifier: ^1.1.0
+        version: 1.1.0(tailwindcss@4.1.18)(zod@4.3.5)
       luxon:
         specifier: ^3.7.2
         version: 3.7.2
@@ -489,6 +489,12 @@ packages:
   '@peculiar/x509@1.14.3':
     resolution: {integrity: sha512-C2Xj8FZ0uHWeCXXqX5B4/gVFQmtSkiuOolzAgutjTfseNOHT3pUjljDZsTSxXFGgio54bCzVFqmEOUrIVk8RDA==}
     engines: {node: '>=20.0.0'}
+
+  '@pirate-software/fs-data@1.1.0':
+    resolution: {integrity: sha512-AWII4thNNfyHGtaTVChdVU7T+RAXO7g4+70DEXmZHGYbQYIN/K7yyMQD6hcaRwy3ApvHOE8x5+hfom3XVwBrHg==, tarball: https://npm.pkg.github.com/download/@pirate-software/fs-data/1.1.0/dbad8974531e66acb61e330709df3ad74b30c214}
+    peerDependencies:
+      tailwindcss: ^4.0.0
+      zod: ^4.0.0
 
   '@pmmmwh/react-refresh-webpack-plugin@0.6.2':
     resolution: {integrity: sha512-IhIAD5n4XvGHuL9nAgWfsBR0TdxtjrUWETYKCBHxauYXEv+b+ctEbs9neEgPC7Ecgzv4bpZTBwesAoGDeFymzA==}
@@ -3725,6 +3731,11 @@ snapshots:
       reflect-metadata: 0.2.2
       tslib: 2.8.1
       tsyringe: 4.10.0
+
+  '@pirate-software/fs-data@1.1.0(tailwindcss@4.1.18)(zod@4.3.5)':
+    dependencies:
+      tailwindcss: 4.1.18
+      zod: 4.3.5
 
   '@pmmmwh/react-refresh-webpack-plugin@0.6.2(@types/webpack@5.28.5(webpack-cli@6.0.1))(react-refresh@0.16.0)(webpack-dev-server@5.2.3)(webpack@5.104.1)':
     dependencies:

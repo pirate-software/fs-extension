@@ -31,7 +31,7 @@ const fetchMeta = async (): Promise<ApiMeta> => {
   return meta;
 };
 
-const fetchApi = async (): Promise<FerretsApiData> => {
+const fetchFerretsApi = async (): Promise<FerretsApiData> => {
   const response = await fetch(`${apiBaseUrl}/ferrets.json`);
   if (!response.ok)
     throw new Error(
@@ -82,7 +82,7 @@ export const FerretsProvider = ({
     fetchMeta()
       .then((meta) => setLastUpdated(meta.lastUpdated))
       .catch((err) => console.error("Failed to fetch ferrets metadata", err));
-    fetchApi() // catch is before then so that if fetch failes, promise chain continues to use fallback data
+    fetchFerretsApi() // catch is before then so that if fetch failes, promise chain continues to use fallback data
       .catch((err) => {
         console.error(err);
         return fallbackData;
@@ -98,7 +98,7 @@ export const FerretsProvider = ({
         fetchMeta()
           .then((meta) => {
             if (meta.lastUpdated !== lastUpdated) {
-              fetchApi()
+              fetchFerretsApi()
                 .then(setData)
                 .catch((err) =>
                   console.error("Failed to fetch ferrets API data", err),
