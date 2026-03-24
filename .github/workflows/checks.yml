@@ -91,5 +91,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Create env file
+        run: cp .env.sample .env
+
       - name: Build extension
         run: pnpm build
