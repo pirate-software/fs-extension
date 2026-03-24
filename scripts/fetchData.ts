@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 import {
   ferretsApiSchema,
   SCHEMA_VERSION_ID,
-} from "../../fs-data/build/api.js"; //TODO: switch to non-file import when possible
+} from "@pirate-software/fs-data/build/api.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
