@@ -1,4 +1,4 @@
-// Modified by mattermatter.dev @ Pirate Software, 2025
+// Modified by mattermatter.dev @ Pirate Software, 2026
 
 import {
   useCallback,
@@ -134,7 +134,7 @@ export default function FerretCard(props: FerretCardProps) {
 
   if (!ferret) return null;
 
-  const wikiUrl = `https://ferrets.piratesoftware.wiki/${ferret.wikipage}`;
+  const wikiUrl = `https://ferrets.pirate.wiki/${ferret.wikipage}`;
   const linkClass =
     "text-textcol dark:text-textcol-dark transition-colors hover:text-highlight dark:hover:text-highlight-dark focus:text-highlight";
 

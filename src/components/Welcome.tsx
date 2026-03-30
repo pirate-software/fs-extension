@@ -1,4 +1,4 @@
-// Modified by mattermatter.dev @ Pirate Software, 2025
+// Modified by mattermatter.dev @ Pirate Software, 2026
 
 import { useMemo } from "react";
 
@@ -16,6 +16,7 @@ import Card from "./Card";
 import IconTikTok from "./icons/IconTikTok";
 import IconYouTube from "./icons/IconYoutube";
 import IconCamera from "./icons/IconCamera";
+import IconKick from "./icons/IconKick";
 
 const socialClass =
   "transition-[color,transform,scale] hover:scale-125 focus:scale-125 hover:text-highlight focus:text-highlight dark:hover:text-highlight-dark dark:focus:text-highlight-dark";
@@ -44,7 +45,7 @@ export default function Welcome(props: WelcomeProps) {
         kind as this is not a charity.
       </p>
 
-      <ul className="mb-2 flex flex-wrap items-center justify-center gap-4">
+      <ul className="mb-2 flex flex-wrap items-center justify-center gap-3">
         <li className={socialClass}>
           <a
             href="https://ferrets.live"
@@ -57,7 +58,7 @@ export default function Welcome(props: WelcomeProps) {
         </li>
         <li className={socialClass}>
           <a
-            href="https://ferrets.piratesoftware.wiki"
+            href="https://ferrets.pirate.wiki"
             rel="noreferrer"
             target="_blank"
             title="Ferret Wiki"
@@ -133,6 +134,16 @@ export default function Welcome(props: WelcomeProps) {
             title="YouTube Streams and Shorts"
           >
             <IconYouTube size={32} />
+          </a>
+        </li>
+        <li className={socialClass}>
+          <a
+            href="https://kick.com/ferretsoftware"
+            rel="noreferrer"
+            target="_blank"
+            title="Kick Streams"
+          >
+            <IconKick size={32} />
           </a>
         </li>
         {nonDefault && (

@@ -1,4 +1,4 @@
-// Modified by mattermatter.dev @ Pirate Software, 2025
+// Modified by mattermatter.dev @ Pirate Software, 2026
 
 import { useEffect, useCallback } from "react";
 
@@ -27,19 +27,28 @@ export default function App() {
   } = useSleeping();
 
   // When the user interacts, show the overlay
-  const interacted = useCallback(
-    (
-      event:
-        | React.MouseEvent
-        | React.WheelEvent
-        | React.TouchEvent
-        | React.KeyboardEvent,
-    ) => {
+  const mouseInteracted = useCallback(
+    (event: React.MouseEvent) => {
       const isCardHovered = !!(
         event.target instanceof Element &&
         event.target.closest('[data-ferret-card="true"]')
       );
-      wake(isCardHovered ? cardHoverTimeout : defaultTimeout);
+      const timeout = isCardHovered ? cardHoverTimeout : defaultTimeout;
+      // only wake from sleep when mouse is in left 15% of screen
+      if (sleeping && !(event.clientX < window.innerWidth * 0.15)) return;
+      wake(timeout);
+    },
+    [wake, sleeping],
+  );
+
+  const otherInteracted = useCallback(
+    (event: React.WheelEvent | React.TouchEvent | React.KeyboardEvent) => {
+      const isCardHovered = !!(
+        event.target instanceof Element &&
+        event.target.closest('[data-ferret-card="true"]')
+      );
+      const timeout = isCardHovered ? cardHoverTimeout : defaultTimeout;
+      wake(timeout);
     },
     [wake],
   );
@@ -66,11 +75,11 @@ export default function App() {
             ? "opacity-0 **:pointer-events-none"
             : "opacity-100",
         )}
-        onMouseEnter={(e) => interacted(e)}
-        onMouseMove={(e) => interacted(e)}
-        onWheel={(e) => interacted(e)}
-        onTouchMove={(e) => interacted(e)}
-        onKeyDown={(e) => interacted(e)}
+        onMouseEnter={(e) => mouseInteracted(e)}
+        onMouseMove={(e) => mouseInteracted(e)}
+        onWheel={(e) => otherInteracted(e)}
+        onTouchMove={(e) => otherInteracted(e)}
+        onKeyDown={(e) => otherInteracted(e)}
         onMouseLeave={sleep}
       >
         <Overlay />

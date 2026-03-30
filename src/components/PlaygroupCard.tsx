@@ -1,4 +1,4 @@
-// Modified by mattermatter.dev @ Pirate Software, 2025
+// Modified by mattermatter.dev @ Pirate Software, 2026
 
 import {
   useCallback,
@@ -49,7 +49,7 @@ export default function PlaygroupCard(props: PlaygroupCardProps) {
 
   if (!playgroup) return null;
 
-  const wikiUrl = `https://ferrets.piratesoftware.wiki/${playgroup.wikipage}`;
+  const wikiUrl = `https://ferrets.pirate.wiki/${playgroup.wikipage}`;
   const linkClass =
     "text-textcol dark:text-textcol-dark transition-colors hover:text-highlight dark:hover:text-highlight-dark focus:text-highlight";
 

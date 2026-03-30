@@ -1,4 +1,4 @@
-// Modified by mattermatter.dev @ Pirate Software, 2025
+// Modified by mattermatter.dev @ Pirate Software, 2026
 
 import { typeSafeObjectEntries } from "../../../../utils/helpers";
 import { classes } from "../../../../utils/classes";
@@ -88,7 +88,7 @@ export default function Settings(props: OverlayOptionProps) {
             <IconExternal className="mb-0.5 inline-block" size={12} />
           </a>
           <br />
-          Special thanks to the PirateSoftware Wikis community
+          Special thanks to the pirate.wikis community
           <img src={yarrLove} alt="yarr love" className="ml-1 inline h-6 w-6" />
           <hr className={hrClass} />
           Brand logo icons from&nbsp;
