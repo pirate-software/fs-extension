@@ -1,4 +1,4 @@
-import { existsSync, writeFileSync } from "fs";
+import { existsSync, writeFileSync, mkdirSync, createWriteStream } from "fs";
 import { join } from "path";
 import { get } from "https";
 import { fileURLToPath } from "url";
@@ -9,6 +9,7 @@ import {
   ferretsApiSchema,
   SCHEMA_VERSION_ID,
 } from "@pirate-software/fs-data/build/api.js";
+import type { FerretsApiData } from "@pirate-software/fs-data/build/api.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,8 +29,10 @@ if (API_BASE_URL.endsWith("/")) {
 const API_URL = `${API_BASE_URL}/ferrets.json`;
 
 const OUTPUT_PATH = join(__dirname, "../src/assets/fallbackData.json");
+const IMAGES_SRC_DIR = "static/media/ferrets";
+const IMAGES_PATH = join(__dirname, "../src/assets/img");
 
-async function processFetchResponse(data: any) {
+async function processFetchResponse(data: any): Promise<FerretsApiData> {
   return new Promise((resolve, reject) => {
     try {
       const jsonData = JSON.parse(data);
@@ -45,7 +48,7 @@ async function processFetchResponse(data: any) {
   });
 }
 
-async function fetchData(url: string): Promise<any> {
+async function fetchData(url: string): Promise<FerretsApiData | null> {
   if (devMode && url.startsWith("http://")) {
     // Allow http for dev mode
     let data = "";
@@ -81,12 +84,74 @@ async function fetchData(url: string): Promise<any> {
   });
 }
 
+function downloadImage(url: string, dest: string) {
+  return new Promise((resolve) => {
+    if (!url) return resolve(false);
+    const file = createWriteStream(dest);
+    console.log("Downloading image:", url, "->", dest);
+    get(url, (response) => {
+      if (response.statusCode !== 200) {
+        file.close();
+        resolve(false);
+        return;
+      }
+      response.pipe(file);
+      file.on("finish", () => {
+        file.close();
+        resolve(true);
+      });
+    }).on("error", () => {
+      file.close();
+      resolve(false);
+    });
+  });
+}
+
+async function syncImages(data: FerretsApiData) {
+  const mugshotDir = join(IMAGES_PATH, "mugshots");
+  const playgroupDir = join(IMAGES_PATH, "playgroups");
+  mkdirSync(mugshotDir, { recursive: true });
+  mkdirSync(playgroupDir, { recursive: true });
+
+  const ferrets = data.ferrets || {};
+  await Promise.all(
+    Object.entries(ferrets).map(async ([, ferret]) => {
+      if (ferret.mugshot && ferret.mugshot.startsWith("http")) {
+        const filename = ferret.mugshot.split("/").pop()!;
+        const absPath = join(mugshotDir, filename);
+        const localPath = join(IMAGES_SRC_DIR, "mugshots", filename);
+        await downloadImage(ferret.mugshot, absPath);
+        ferret.mugshot = localPath.replace(/\\/g, "/");
+      }
+    }),
+  );
+
+  const playgroups = data.playgroups || {};
+  await Promise.all(
+    Object.entries(playgroups).map(async ([, group]) => {
+      if (group.image && group.image.startsWith("http")) {
+        const filename = group.image.split("/").pop()!;
+        const absPath = join(playgroupDir, filename);
+        const localPath = join(IMAGES_SRC_DIR, "playgroups", filename);
+        await downloadImage(group.image, absPath);
+        group.image = localPath.replace(/\\/g, "/");
+      }
+    }),
+  );
+}
+
 async function main() {
   try {
     console.log(`Fetching data from ${API_URL}`);
     const data = await fetchData(API_URL);
 
     if (data) {
+      await syncImages(data);
+      console.log("Images saved");
+
+      // verify schema
+      ferretsApiSchema.parse(data);
+
       writeFileSync(OUTPUT_PATH, JSON.stringify(data, null, 2));
       console.log(`Data saved to ${OUTPUT_PATH}`);
     } else if (devMode && existsSync(OUTPUT_PATH)) {

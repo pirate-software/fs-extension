@@ -122,7 +122,19 @@ const config: webpack.Configuration = {
     }),
     // Include the public directory
     new CopyWebpackPlugin({
-      patterns: [{ from: "public", to: "." }],
+      patterns: [
+        { from: "public", to: "." },
+        {
+          from: "src/assets/img/mugshots",
+          to: "static/media/ferrets/mugshots",
+          noErrorOnMissing: true,
+        },
+        {
+          from: "src/assets/img/playgroups",
+          to: "static/media/ferrets/playgroups",
+          noErrorOnMissing: true,
+        },
+      ],
     }),
     // Load environment variables as a single object
     new webpack.DefinePlugin({

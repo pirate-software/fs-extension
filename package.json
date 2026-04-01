@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
-    "@pirate-software/fs-data": "^1.1.0",
+    "@pirate-software/fs-data": "^1.1.1",
     "luxon": "^3.7.2",
     "react": "^19.2.3",
     "react-canvas-confetti": "^2.0.7",

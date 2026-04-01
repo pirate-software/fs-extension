@@ -47,6 +47,45 @@ const fetchFerretsApi = async (): Promise<FerretsApiData> => {
   return ferretsApiSchema.parse(data[SCHEMA_VERSION_ID]);
 };
 
+const getFallbackImagePath = (assetPath: string) => {
+  if (!assetPath.startsWith("static")) return assetPath;
+
+  // Build a page-relative absolute URL so extension pages resolve consistently.
+  if (typeof window !== "undefined") {
+    return new URL(assetPath, window.location.href).toString();
+  }
+
+  return `./${assetPath}`;
+};
+
+const fixFallbackImages = (data: FerretsApiData): FerretsApiData => {
+  return {
+    ...data,
+    ferrets: Object.fromEntries(
+      Object.entries(data.ferrets).map(([key, ferret]) => [
+        key,
+        {
+          ...ferret,
+          mugshot: getFallbackImagePath(ferret.mugshot),
+          images: ferret.images.map((image) => ({
+            ...image,
+            src: getFallbackImagePath(image.src),
+          })),
+        },
+      ]),
+    ),
+    playgroups: Object.fromEntries(
+      Object.entries(data.playgroups).map(([key, playgroup]) => [
+        key,
+        {
+          ...playgroup,
+          image: getFallbackImagePath(playgroup.image),
+        },
+      ]),
+    ),
+  };
+};
+
 // fallbackDataRaw is the full fallbackData.json object, which should match the API structure
 // fallbackDataRaw may have a _comment or be empty if not yet fetched
 const fallbackData: FerretsApiData | null = (() => {
@@ -60,7 +99,7 @@ const fallbackData: FerretsApiData | null = (() => {
   // Try to find the schema version key
   const data = (fallbackDataRaw as any)[SCHEMA_VERSION_ID] || fallbackDataRaw;
   try {
-    return ferretsApiSchema.parse(data);
+    return fixFallbackImages(ferretsApiSchema.parse(data));
   } catch (e) {
     console.error("Failed to parse fallback ferrets data", e);
     return null;
@@ -80,15 +119,16 @@ export const FerretsProvider = ({
   // On mount, attempt to fetch the ferrets from the API
   // If we can't fetch the ferrets, use the data from the data package
   useEffect(() => {
-    fetchMeta()
-      .then((meta) => setLastUpdated(meta.lastUpdated))
-      .catch((err) => console.error("Failed to fetch ferrets metadata", err));
-    fetchFerretsApi() // catch is before then so that if fetch failes, promise chain continues to use fallback data
-      .catch((err) => {
-        console.error(err);
-        return fallbackData;
-      })
-      .then(setData);
+    setData(fallbackData); //TEMP
+    // fetchMeta()
+    //   .then((meta) => setLastUpdated(meta.lastUpdated))
+    //   .catch((err) => console.error("Failed to fetch ferrets metadata", err));
+    // fetchFerretsApi() // catch is before then so that if fetch failes, promise chain continues to use fallback data
+    //   .catch((err) => {
+    //     console.error(err);
+    //     return fallbackData;
+    //   })
+    //   .then(setData);
   }, []);
 
   // Every 2 hours, attempt to fetch the ferrets from the API
